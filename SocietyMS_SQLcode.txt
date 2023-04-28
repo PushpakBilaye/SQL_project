@@ -1,0 +1,713 @@
+
+CREATE TABLE societymst(
+SID int(11) NOT NULL,
+SName varchar(30) NOT NULL,
+Address varchar(50) NOT NULL,
+City varchar(20) NOT NULL,
+Pincode varchar(20) NOT NULL,
+No_Houses int(11) NOT NULL,
+SCreateDate date NOT NULL DEFAULT '2011-01-01',
+PRIMARY KEY (SID)
+)
+
+#####################################################################################################################################################
+
+create table housemst(HID int,Block_No int, Type varchar(20),Detail varchar(200),SName varchar(30),HCreateDate date);
+
+CREATE TABLE housemst(
+HID int(11) NOT NULL,
+Block_No int(11) NOT NULL,
+Type set('1RK','1BHK','2BHK','3BHK') NOT NULL,
+Detail varchar(100) DEFAULT NULL,
+SName varchar(30) NOT NULL,
+HCreateDate date DEFAULT '2011-01-01',
+PRIMARY KEY (HID)
+)
+
+######################################################################################################################################################
+
+create table usermst(UID int,Fname varchar(20),LName varchar(20),Email varchar(30),Mobile bigint,BirthDate datetime,HID int,SocietyName varchar(20),Member int,UserName varchar(30),Password nvarchar(20),UCreateDate datetime);
+
+CREATE TABLE usermst(
+UID int(11) NOT NULL,
+FName varchar(20) NOT NULL,
+LName varchar(20) DEFAULT NULL,
+Email varchar(30) NOT NULL,
+Mobile bigint(20) NOT NULL,
+BirthDate date DEFAULT NULL,
+HouseID int(11) DEFAULT NULL,
+SocietyName varchar(20) NOT NULL,
+Member int(11) NOT NULL,
+UserName varchar(20) NOT NULL,
+Password varchar(20) NOT NULL,
+UCreateDate date DEFAULT NULL,
+PRIMARY KEY(UID),
+KEY fk_u_hid(HouseID),
+CONSTRAINT fk_u_hid FOREIGN KEY(HouseID) REFERENCES housemst(HID),
+UNIQUE KEY Mobile(Mobile),
+UNIQUE KEY UserName(UserName)
+)
+
+######################################################################################################################################################
+
+create table rentmst(RID int, HID int, SName varchar(20), UID int, Rent float, RCreateDate date);
+
+CREATE TABLE rentmst(
+RID int(11) NOT NULL,
+HID int(11) NOT NULL,
+SName varchar(20) NOT NULL,
+UID int(11) NOT NULL,
+Rent float NOT NULL,
+RCreateDate date NOT NULL,
+PRIMARY KEY(RID),
+KEY fk_r_hid(HID),
+KEY fk_r_uid(UID),
+CONSTRAINT fk_r_hid FOREIGN KEY(HID) REFERENCES housemst(HID),
+CONSTRAINT fk_r_uid FOREIGN KEY(UID) REFERENCES usermst(UID)
+)
+
+
+create table sellmst(SID int, HID int, SName varchar(20),UID int, Sell float, SellCreateDate date);
+
+CREATE TABLE sellmst(
+SID int(11) NOT NULL,
+HID int(11) NOT NULL,
+SName varchar(20) NOT NULL,
+UID int(11) NOT NULL,
+Sell float NOT NULL,
+SellCreateDate date NOT NULL,
+PRIMARY KEY(SID),
+KEY fk_s_hid(HID),
+KEY fk_s_uid(UID),
+CONSTRAINT fk_s_hid FOREIGN KEY(HID) REFERENCES housemst(HID),
+CONSTRAINT fk_s_uid FOREIGN KEY(UID) REFERENCES usermst(UID)
+)
+
+
+create table complainmst(CID int, UID int, Subject varchar(200),Complain varchar(500),Reply varchar(200),Status varchar(20),CCreateDate date);
+
+CREATE TABLE complainmst(
+CID int(11) NOT NULL,
+UID int(11) NOT NULL,
+Subject varchar(100) NOT NULL,
+Complain varchar(300) NOT NULL,
+Reply varchar(400) DEFAULT NULL,
+Status enum('solved','pending') NOT NULL,
+CCreateDate date NOT NULL,
+PRIMARY KEY(CID),
+KEY fk_c_uid(UID),
+CONSTRAINT fk_c_uid FOREIGN KEY(UID) REFERENCES usermst(UID)
+)
+
+######################################################################################################################################################
+INSERT INTO societymst values
+(1,'Durga Darshan','sainagar, kranti road, Kalyan east','Kalyan','400500',20,'2011-01-01'),
+(2,'Smriti','desai gaon, desai road, Karjat east','Karjat','403500',21,'2012-02-03'),
+(3,'Hari Om','narayan nagar, hari road, Shahad','Shahad','403550',24,'2011-03-02'),
+(4,'Krishna','sainagar, kranti road, kalyan','kalyan','400500',22,'2011-02-03'),
+(5,'Kirti','kirtinagar, murti road, kalyan','kalyan','400500',25,'2011-02-03'),
+(6,'Suhana complex','kirtinagar, murti road, kalyan east','kalyan','400500',25,'2011-02-03'),
+(7,'Suhana','narayan nagar, hari road, Shahad','Shahad','403550',25,'2011-03-02'),
+(8,'Naina','nana nagar, desai road, Karjat','Karjat','403501',18,'2012-01-04'),
+(9,'Trimurti','kailash nagar, krupa road, Karjat','Karjat','403502',28,'2012-05-01'),
+(10,'Shreelok','saishanti nagar, krupalu road, Karjat','Karjat','403502',28,'2011-02-05'),
+(11,'Ram complex','ram nagar, tirth road, Pune','Pune','405505',19,'2014-04-05'),
+(12,'Sita complex','dhumaal nagar, dhumaal road, Pune','Pune','405505',23,'2013-04-05'),
+(13,'Laxman complex','kamala nagar, hari road, Pune','Pune','406505',23,'2014-04-05'),
+(14,'Hira Nandani','sector 7, saint churchil road, Mumbai','Mumbai','406605',20,'2015-04-05'),
+(15,'Kuber','sector 9, oxford road, Mumbai','Mumbai','406605',20,'2014-04-05'),
+(16,'Jeshth','jadhav vadi, zeno road, Mumbai','Mumbai','403605',20,'2014-04-05'),
+(17,'Shnatikrupa','sankarshan vadi, lal bahadur shastri road, Churchgate','Mumbai','403605',25,'2017-04-05'),
+(18,'Krupashnati','shiksha nagar, sule road, Nashik','Nashik','408605',28,'2014-04-05'),
+(19,'Sudama','mahatma nagar, phule road, Nashik','Nashik','408606',28,'2014-04-05'),
+(20,'Janadhish','lala nagar, Maulana road, Auranagabad','Aurangabad','409206',30,'2015-04-05'),
+(21,'Sambhaji society','fatima nagar, Maulana road, Auranagabad','Aurangabad','409206',30,'2016-04-05'),
+(22,'Gajanan darshan','shivaji chowk, trupti road, Auranagabad','Aurangabad','405205',30,'2016-04-05'),
+(23,'Sai Darshan','ramnagar, phule road, diva west','Diva',421400,26,'2013-12-23'),
+(24,'Tridant','tilaknagar, gupte road, diva east','Diva',421401,22,'2012-12-23'),
+(25,'Juhu Complex','milapnagar, tondon road, kharghar','Kharghar',421402,20,'2005-11-25'),
+(26,'Harvey','kiran nagar, tondon road, kharghar','Kharghar',421403,24,'2009-10-10'),
+(27,'Jagadhish','gaikwad wadi, 22 no road, thane east','Thane',421404,25,'2009-09-20'),
+(28,'Suda Chatra','sudha wadi, 16 no road, thane west','Thane',421405,20,'2010-08-21'),
+(29,'Hemalaya','vishnunagar, 11 no road, thane west','Thane',421406,25,'2011-07-21'),
+(30,'Dvipal','prabhatnagar, 26 no road, thane east','Thane',421407,30,'2013-06-02'),
+(31,'Hira Jyoti','kalshe nagar, shise road, mulund east','Mulund',421408,22,'2007-05-02'),
+(32,'Sakal Jyoti','bhise nagar, shise road, mulund east','Mulund',421409,28,'2008-04-08'),
+(33,'Deep Jaya','nandgaon, gupte road, mulund west','Mulund',421410,29,'2010-03-16'),
+(34,'Sankalp','jakat naka, jakat naka road, mulund west','Mulund',421411,18,'2011-02-19');
+
+################################################################################################################################
+insert into housemst values
+(200,1001,'1RK','area 350 sqft, east face entry door,1 kitchen 1 hall, no leakage','Durga Darshan',500,"2011-01-01"),
+(201,1002,'1BHK','area 500 sqft, north face entry door, 1 bedroom 1 hall 1 kitchen','Durga Darshan',800,'2011-01-01'),
+(202,1003,'2BHK','area 700 sqft, south face entry door, 2 bedroom 1 hall 1 kitchen','Durga Darshan',1800,'2011-01-01'),
+(203,1004,'3BHK','area 900 sqft, west face entry door, 3 bedroom 1 hall 1 kitchen','Durga Darshan',2800,'2011-01-01'),
+(204,1005,'1BHK','area 490 sqft, south-west face entry door, 1 bedroom 1 hall 1 kitchen','Durga Darshan',900,'2011-01-01'),
+(205,1006,'2BHK','area 710 sqft, north-east face entry door, 2 bedroom 1 hall 1 kitchen','Trimurti',1900,'2012-05-01'),
+(206,1007,'1RK','area 300 sqft, north face entry door, 1 hall 1 kitchen','Trimurti',750,'2012-05-01'),
+(207,1008,'3BHK','area 920 sqft, east face entry door,3 bedroom 1 hall 1 kitchen','Trimurti',2000,'2012-05-01'),
+(208,1009,'2BHK','area 750 sqft, west face entry door,2 bedroom 1 hall 1 kitchen','Trimurti',1500,'2012-05-01'),
+(209,1010,'1BHK','area 500 sqft, south face entry door,1 bedroom 1 hall 1 kitchen','Ram complex',900,'2014-04-05'),
+(210,1011,'2BHK','area 700 sqft, south face entry door, 2 bedroom 1 hall 1 kitchen','Ram complex',1750,'2014-04-05'),
+(211,1012,'1BHK','area 510 sqft, east face entry door, 1 bedroom 1 hall 1 kitchen','Ram complex',1340,'2014-04-05'),
+(212,1013,'2BHK','area 700 sqft, west face entry door, 2 bedroom 1 hall 1 kitchen','Ram complex',2300,'2014-04-05'),
+(213,1014,'1RK','area 300 sqft, south-west face entry door, 1 hall 1 kitchen','Jeshth',700,'2014-04-05'),
+(214,1015,'1BHK','area 490 sqft, south-east face entry door,1 bedroom 1 hall 1 kitchen','Jeshth',1450,'2014-04-05'),
+(215,1016,'1RK','area 340 sqft, north-west face entry door, 1 hall 1 kitchen','Jeshth',1000,'2014-04-05'),
+(216,1017,'2BHK','area 700 sqft, north-east face entry door, 2 bedroom 1 hall 1 kitchen','Jeshth',1990,'2014-04-05'),
+(217,1018,'1RK','area 295 sqft, east face entry door, 1 hall 1 kitchen','Janadhish',890,'2015-04-05'),
+(218,1019,'1RK','area 300 sqft, south face entry door, 1 hall 1 kitchen','Janadhish',860,'2015-04-05'),
+(219,1020,'1RK','area 300 sqft, south face entry door, 1 hall 1 kitchen','Janadhish',790,'2015-04-05'),
+(220,1021,'1RK','area 295 sqft, west face entry door, 1 hall 1 kitchen','Janadhish',900,'2015-04-05'),
+(221,1022,'1BHK','area 495 sqft, south face entry door, 1 bedroom 1 hall 1 kitchen','Sudama',1340,'2014-04-05'),
+(222,1023,'2BHK','area 750 sqft, north face entry door, 2 bedroom 1 hall 1 kitchen','Sudama',1940,'2014-04-05'),
+(223,1024,'3BHK','area 890 sqft, north face entry door, 3 bedroom 1 hall 1 kitchen','Sudama',2750,'2014-04-05'),
+(224,1025,'1BHK','area 500 sqft, east face entry door, 1 bedroom 1 hall 1 kitchen','Suhana',1230,'2011-03-02'),
+(225,1026,'1BHK','area 510 sqft, west face entry door, 1 bedroom 1 hall 1 kitchen','Suhana',1330,'2011-03-02'),
+(226,1027,'1BHK','area 510 sqft, north face entry door, 1 bedroom 1 hall 1 kitchen','Suhana',1290,'2011-03-02'),
+(227,1028,'1RK',NULL,'Suhana',475,NULL);
+(228,1029,'1BHK','area 500 sqft, south face entry door, 1 bedroom 1 hall 1 kitchen','Sai Darshan',1200,'2014-01-20'),
+(229,1030,'1BHK','area 510 sqft, south face entry door, 1 bedroom 1 hall 1 kitchen','Sai Darshan',1250,'2014-02-20'),
+(230,1031,'1RK','area 350 sqft, north face entry door, 1 hall 1 kitchen','Tridant',500,'2013-02-02'),
+(231,1032,'2BHK','area 700 sqft, north face entry door, 2 bedroom 1 hall 1 kitchen','Tridant',1850,'2013-01-02'),
+(232,1033,'3BHK','area 920 sqft, east face entry door, 3 bedroom 1 hall 1 kitchen','Juhu Complex',2450,'2006-01-22'),
+(233,1034,'2BHK','area 720 sqft, west face entry door, 2 bedroom 1 hall 1 kitchen','Juhu Complex',1840,'2006-01-22'),
+(234,1035,'1BHK','area 520 sqft, west-south face entry door, 1 bedroom 1 hall 1 kitchen','Harvey',1400,'2010-02-28'),
+(235,1036,'3BHK','area 990 sqft, east-south face entry door, 3 bedroom 1 hall 1 kitchen','Harvey',2590,'2010-01-29'),
+(236,1037,'1RK','area 410 sqft, south face entry door, 1 hall 1 kitchen','Jagadhish',395,'2010-03-30'),
+(237,1038,'1RK','area 385 sqft, south face entry door, 1 hall 1 kitchen','Jagadhish',420,'2010-02-04'),
+(238,1039,'3BHK','area 935 sqft, east face entry door, 3 bedroom 1 hall 1 kitchen','Suda Chatra',3000,'2010-09-04'),
+(239,1040,'1BHK','area 490 sqft, north face entry door, 1 bedroom 1 hall 1 kitchen','Suda Chatra',1000,'2010-10-05'),
+(240,1041,'2BHK','area 750 sqft, north-west face entry door, 2 bedroom 1 hall 1 kitchen','Hemalaya',2000,'2011-10-15'),
+(241,1042,'2BHK','area 750 sqft, north-west face entry door, 2 bedroom 1 hall 1 kitchen','Hemalaya',2100,'2011-11-15'),
+(242,1043,'1RK','area 400 sqft, south-east face entry door, 1 hall 1 kitchen','Dvipal',600,'2013-07-05'),
+(243,1044,'1RK','area 400 sqft, north-west face entry door, 1 hall 1 kitchen','Dvipal',650,'2013-09-05'),
+(244,1045,'3BHK','area 900 sqft, west face entry door, 3 bedroom 1 hall 1 kitchen','Hira Jyoti',3850,'2009-10-05'),
+(245,1046,'3BHK','area 890 sqft, north face entry door, 3 bedroom 1 hall 1 kitchen','Hira Jyoti',4000,'2009-11-05'),
+(246,1047,'2BHK','area 695 sqft, south face entry door, 2 bedroom 1 hall 1 kitchen','Sakal Jyoti',2200,'2008-05-25'),
+(247,1048,'1BHK','area 510 sqft, east face entry door, 1 bedroom 1 hall 1 kitchen','Sakal Jyoti',1500,'2008-06-15'),
+(248,1049,'2BHK','area 790 sqft, south-east face entry door, 2 bedroom 1 hall 1 kitchen','Deep Jaya',2150,'2010-04-15'),
+(249,1050,'1RK','area 390 sqft, south-west face entry door, 1 hall 1 kitchen','Deep Jaya',460,'2010-04-29'),
+(250,1051,'2BHK','area 800 sqft, north-west face entry door, 2 bedroom 1 hall 1 kitchen','Sankalp',1990,'2011-04-29'),
+(251,1052,'2BHK','area 820 sqft, north-west face entry door, 2 bedroom 1 hall 1 kitchen','Sankalp',2000,'2011-07-29');
+
+###############################################################################################################################
+
+insert into usermst values
+(100,'Ram','Sule','r@gmail.com',1234567890,'1985-04-04',200,'Durga Darshan',4,'123ram','123ram','2012-01-01'),
+(101,'Sita','Sethi','s@gmail.com',1234567880,'1989-04-04',201,'Durga Darshan',3,'123sita','123sita','2013-01-01'),
+(102,'Hari','Lal','h@gmail.com',0987654321,'1990-06-09',202,'Durga Darshan',5,'123hari','123hari','2012-05-07'),
+(103,'Shital','Kolhe','sh@gmail.com',1987654321,'1993-06-09',203,'Durga Darshan',6,'123shital','123shital','2012-05-04'),
+(104,'Haresh','Gurav','har@gmail.com',2987654321,'1992-06-09',204,'Durga Darshan',4,'123haresh','123haresh','2013-08-04'),
+(105,'Jitesh','Salvi','j@gmail.com',3987654321,'1985-06-09',205,'Trimurti',4,'123jitesh','123jitesh','2013-02-04'),
+(106,'Kunal','Sonar','k@gmail.com',4987654321,'1989-06-09',206,'Trimurti',5,'123kunal','123kunal','2013-07-08'),
+(107,'Rahul','Mahajan','ra@gmail.com',5987654321,'1994-06-09',207,'Trimurti',7,'123rahul','123rahul','2012-07-08'),
+(108,'Lokesh','Jhambre','l@gmail.com',6987654321,'1992-09-09',208,'Trimurti',7,'123lokesh','123lokesh','2013-02-08'),
+(109,'Sham','Patil','sham@gmail.com',7987654321,'1982-09-07',209,'Ram Complex',3,'123sham','123sham','2015-01-01'),
+(110,'Kamlesh','Kulkarni','kam@gmail.com',8987654321,'1987-03-04',210,'Ram Complex',6,'123kamlesh','123kamlesh','2015-05-01'),
+(111,'Shahrukh','Khan','shah@gmail.com',9987654321,'1979-03-04',211,'Ram Complex',4,'123shahrukh','123shahrukh','2014-02-01'),
+(112,'Salman','Khan','sallu@gmail.com',9187654321,'1975-03-04',212,'Ram Complex',5,'123salman','123salman','2014-05-01'),
+(113,'Amir','Khan','ak@gmail.com',9287654321,'1972-02-06',213,'Jeshth',2,'123amir','123amir','2014-09-01'),
+(114,'Karan','Johar','kar@gmail.com',9387654321,'1970-01-06',214,'Jeshth',3,'123karan','123karan','2014-12-02'),
+(115,'Dipika','Padukon','d@gmail.com',9487654321,'1985-01-06',215,'Jeshth',4,'123dipika','123dipika','2015-01-02'),
+(116,'Ranveer','Singh','ran@gmail.com',9587654321,'1987-01-16',216,'Jeshth',5,'123ranveer','123ranveer','2015-02-02'),
+(117,'Kailash','Kher','kail@gmail.com',9687654321,'1982-02-27',217,'Janadhish',2,'123kailash','123kailash','2015-01-14'),
+(118,'Nana','Patekar','nana@gmail.com',9787654321,'1980-02-20',218,'Janadhish',3,'123nana','123nana','2014-08-24'),
+(119,'Mithila','Palkar','m@gmail.com',9887654321,'1990-12-20',219,'Janadhish',1,'123mithila','123mithila','2015-10-02'),
+(120,'Sachin','Pilgaonkar','sach@gmail.com',9988654321,'1970-02-21',220,'Janadhish',3,'123sachin','123sachin','2015-11-02'),
+(121,'Kedar','Jadhav','ked@gmail.com',9917654321,'1979-02-20',221,'Sudama',3,'123kedar','123kedar','2014-11-02'),
+(122,'Tamanna','Bhatia','t@gmail.com',9927654321,'1982-03-22',222,'Sudama',4,'123tamanna','123tamanna','2014-07-12'),
+(123,'Allu','Arjun','al@gmail.com',9937654321,'1980-04-22',223,'Sudama',5,'123allu','123allu','2014-09-22'),
+(124,'Kiran','Kher','ki@gmail.com',9947654321,'1965-03-22',224,'Suhana',4,'123kiran','123kiran','2011-05-25'),
+(125,'Sumit','Kalan','sum@gmail.com',9957654321,'1986-03-12',225,'Suhana',2,'123sumit','123sumit','2011-07-10'),
+(126,'Sandip','Patil','san@gmail.com',9967654321,'1996-03-01',226,'Suhana',3,'123sandip','123sandip','2012-01-10'),
+(127,'Sakthes','Nadar','sak@gmail.com',9977654321,'1991-04-01',227,'Suhana',4,'123sakthes','123sakthes','2011-07-10'),
+(128,'Hrishikesh','Kurhade','hri@gmail.com',9997654321,'1992-03-01',228,'Sai Darshan',4,'123hrishi','123hrishi','2014-01-20'),
+(129,'Kumar','Patil','kum@gmail.com',9998654321,'1983-12-18',229,'Sai Darshan',2,'123kumar','123kumar','2014-01-20'),
+(130,'Prathamesh','Mhatre','pr@gmail.com',9999654321,'1984-11-18',230,'Tridant',5,'123prathamesh','123prathamesh','2013-04-10'),
+(131,'Samir','Desle','sam@gmail.com',9991654321,'1985-12-14',231,'Tridant',3,'123samir','123samir','2013-04-13'),
+(132,'Swapnil','More','swap@gmail.com',9992654321,'1980-12-14',232,'Juhu Complex',5,'123swapnil','123swapnil','2006-03-17'),
+(133,'Sahil','Khan','sahil@gmail.com',9993654321,'1983-02-14',233,'Juhu Complex',3,'123sahil','123sahil','2006-04-17'),
+(134,'Kuldeep','Yadav','kul@gmail.com',9994654321,'1973-02-14',234,'Harvey',4,'123kul','123kul','2010-04-17'),
+(135,'Rakul','Singh','rak@gmail.com',9995654321,'1990-02-14',235,'Harvey',2,'123rakul','123rakul','2010-04-17'),
+(136,'Hemant','Mansukh','hem@gmail.com',9999154321,'1968-12-24',236,'Jagadhish',5,'123hemant','123hemant','2011-01-27'),
+(137,'Tiger','Shroff','tig@gmail.com',9999254321,'1988-12-24',237,'Jagadhish',3,'123tiger','123tiger','2011-01-20'),
+(138,'Sukhi','Kanchan','kan@gmail.com',9999354321,'1989-02-14',238,'Suda Chatra',4,'123kanchan','123kanchan','2011-01-20'),
+(139,'Ankush','Choudhari','an@gmail.com',9999454321,'1981-09-01',239,'Suda Chatra',5,'123ankush','123ankush','2011-01-20'),
+(140,'Priyanka','Choudhari','pri@gmail.com',9999554321,'1983-01-10',240,'Hemalaya',2,'123priyanka','123priyanka','2011-11-10'),
+(141,'Nicolas','Puran','nik@gmail.com',9999754321,'1981-10-10',241,'Hemalaya',4,'123puran','123puran','2011-11-10'),
+(142,'Dinesh','Sawant','din@gmail.com',9999854321,'1971-12-19',242,'Dvipal',1,'123dinesh','123dinesh','2013-10-18'),
+(143,'Dinkar','Parab','dink@gmail.com',9999954321,'1975-12-29',243,'Dvipal',5,'123dinkar','123dinkar','2013-11-18'),
+(144,'Shakib','Ansari','sha@gmail.com',9999914321,'1964-04-09',244,'Hira Jyoti',2,'123shakib','123shakib','2010-01-28'),
+(145,'Sahil','Patel','sahilp@gmail.com',9999924321,'1989-04-09',245,'Hira Jyoti',5,'123sahilp','123sahilp','2010-01-03'),
+(146,'Shubham','Dhoble','shu@gmail.com',9999934321,'1981-05-29',246,'Sakal Jyoti',3,'123shubham','123shubham','2008-06-23'),
+(147,'Shubham','Patil','shupa@gmail.com',9999944321,'1972-09-29',247,'Sakal Jyoti',4,'123shubhampa','123shubhampa','2008-07-23'),
+(148,'Shubham','Nanche','shuna@gmail.com',9999964321,'1972-10-19',248,'Deep Jaya',5,'123nanche','123nanche','2010-07-04'),
+(149,'Bhandari','Bhandari','tanm@gmail.com',9999974321,'1976-04-02',249,'Deep Jaya',3,'123tanmay','123tanmay','2010-07-04'),
+(150,'Sheela','Shetty','sheela@gmail.com',9999984321,'1977-12-02',250,'Sankalp',6,'123sheela','123sheela','2011-07-24'),
+(151,'Kalpana','Chawla','kalp@gmail.com',9999994321,'1967-11-15',251,'Sankalp',7,'123kalpana','123kalpana','2011-07-24');
+
+######################################################################################################################################
+
+insert into sellmst values
+(300,200,'Durga Darshan',100,2000000,'2021-09-02'),
+(301,228,'Sai Darshan',128,2500000,'2020-09-02'),
+(302,205,'Trimurti',105,6000000,'2021-10-02'),
+(303,230,'Tridant',130,4500000,'2019-10-22'),
+(304,209,'Ram Complex',109,4900000,'2020-01-22'),
+(305,232,'Juhu Complex',132,8000000,'2020-12-22'),
+(306,213,'Jeshth',113,4000000,'2021-12-22'),
+(307,234,'Harvey',134,3000000,'2018-02-22'),
+(308,217,'Janadhish',117,2800000,'2019-06-22'),
+(309,236,'Jagadhish',136,4100000,'2020-06-12'),
+(310,221,'Sudama',121,5100000,'2021-06-12'),
+(311,238,'Suda Chatra',138,7300000,'2020-06-12'),
+(312,224,'Suhana',124,6000000,'2019-06-12'),
+(313,240,'Hemalaya',140,6200000,'2020-09-23'),
+(314,208,'Trimurti',108,6950000,'2021-11-23'),
+(315,242,'Dvipal',142,5050000,'2020-11-23'),
+(316,212,'Ram Complex',112,5980000,'2021-12-28'),
+(317,244,'Hira Jyoti',144,3990000,'2022-01-28'),
+(318,246,'Sakal Jyoti',146,6390000,'2019-04-28'),
+(319,248,'Deep Jaya',148,7390000,'2020-04-28'),
+(320,251,'Sankalp',151,3490000,'2019-05-28'),
+(321,223,'Sudama',123,12400000,'2021-05-28');
+
+################################################################################################################################################
+
+insert into rentmst values
+(400,201,'Durga Darshan',101,6000,'2017-04-12'),
+(401,202,'Durga Darshan',102,9880,'2016-01-02'),
+(402,203,'Durga Darshan',103,12000,'2016-12-02'),
+(403,206,'Trimurti',106,3000,'2018-02-02'),
+(404,207,'Trimurti',107,13400,'2018-02-02'),
+(405,210,'Ram Complex',110,11000,'2019-04-18'),
+(406,211,'Ram Complex',111,7500,'2019-05-18'),
+(407,214,'Jeshth',114,8500,'2018-10-21'),
+(408,215,'Jeshth',115,3200,'2018-10-11'),
+(409,218,'Janadhish',118,3700,'2017-10-11'),
+(410,219,'Janadhish',119,3800,'2017-11-19'),
+(411,222,'Sudama',122,8800,'2018-03-29'),
+(412,225,'Suhana',125,5800,'2017-02-29'),
+(413,226,'Suhana',126,6000,'2017-09-09'),
+(414,229,'Sai Darshan',129,9000,'2019-10-09'),
+(415,231,'Tridant',131,12800,'2019-12-01'),
+(416,233,'Juhu Complex',133,14200,'2020-02-11'),
+(417,235,'Harvey',135,16000,'2020-03-18'),
+(418,237,'Jagadhish',137,2800,'2021-05-28'),
+(419,239,'Suda Chatra',139,7200,'2019-03-24'),
+(420,241,'Hemalaya',141,10350,'2018-12-24'),
+(421,243,'Dvipal',143,2350,'2017-06-07');
+
+##################################################################################################################################################
+
+insert into complain values
+(500,100,'Water shortage','Regarding shortage of water in house','still complaint is pending','pending','2014-05-11'),
+(501,101,'High maintenance charges','Regarding high maintenance charges','Thank you','solved','2014-06-12'),
+(502,102,'Facing parking problem','Regarding parking problem',NULL,'solved','2014-07-13'),
+(503,103,'Facing water leakage problem','Regarding water leakage at bathroom','Thank you','solved','2014-08-14'),
+(504,104,'Safety neglect','Regarding safety neglect',NULL,'pending','2014-09-15'),
+(505,105,'Safety fraudulent/incomplete audits','Regarding incompletion of audits','Still audits are pending','pending','2014-10-16'),
+(506,106,'High maintenance charges','Regarding high maintenance charges','Thank you','solved','2015-01-10'),
+(507,107,'Water shortage','Regarding shortage of water in house',' ','solved','2015-02-09'),
+(508,108,'Facing parking problem','Regarding parking problem',' ','solved','2015-03-08'),
+(509,109,'Facing water leakage problem','Regarding water leakage in bedroom','Thank you','solved','2015-03-07'),
+(510,110,'Safety neglect','Regarding safety neglect','Thank you','solved','2015-04-08'),
+(511,111,'Water shortage','Regarding shortage of water in house','Thank you','solved','2016-05-21'),
+(512,112,'Facing parking problem','Regarding parking problem',NULL,'solved','2016-06-22'),
+(513,113,'High maintenance charges','Regarding high maintenance charges',NULL,'pending','2016-07-23'),
+(514,114,'Safety neglect','Regarding safety neglect','Thank you','solved','2016-08-24'),
+(515,115,'Safety incomplete audits','Regarding incompletion of audits','Thank you','solved','2016-09-25'),
+(516,116,'Water shortage','Regarding shortage of water in house','solved','solved','2017-10-26'),
+(517,117,'Facing water leakage problem','Regarding water leakage at bathroom','no problem now','solved','2017-11-27'),
+(518,118,'Facing parking problem','Regarding parking problem','Thank you','solved','2017-12-28'),
+(519,119,'Water shortage','Regarding shortage of water in house','still complaint is pending','pending','2017-12-28'),
+(520,120,'Nuisance caused by residents','Regarding loud music from neighbour','Thank you','solved','2018-01-29');
+
+###############################################################################################################################################
+
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from sellmst where sell=2000000);
++-------+-------+
+| fname | lname |
++-------+-------+
+| Ram   | Sule  |
++-------+-------+
+1 row in set (0.112 sec)
+
+MariaDB [society_management]> select * from usermst where societyname IN(select sname from rentmst where sname='Ram Complex' AND sname='Suda Chatra');
+Empty set (0.134 sec)
+
+MariaDB [society_management]> select * from usermst where societyname IN(select sname from rentmst where sname='Ram Complex' OR sname='Suda Chatra');
++-----+----------+-----------+-----------------+------------+------------+---------+-------------+--------+-------------+-------------+-------------+
+| UID | FName    | LName     | Email           | Mobile     | BirthDate  | HouseID | SocietyName | Member | UserName    | Password    | UCreateDate |
++-----+----------+-----------+-----------------+------------+------------+---------+-------------+--------+-------------+-------------+-------------+
+| 109 | Sham     | Patil     | sham@gmail.com  | 7987654321 | 1982-09-07 |     209 | Ram Complex |      3 | 123sham     | 123sham     | 2015-01-01  |
+| 110 | Kamlesh  | Kulkarni  | kam@gmail.com   | 8987654321 | 1987-03-04 |     210 | Ram Complex |      6 | 123kamlesh  | 123kamlesh  | 2015-05-01  |
+| 111 | Shahrukh | Khan      | shah@gmail.com  | 9987654321 | 1979-03-04 |     211 | Ram Complex |      4 | 123shahrukh | 123shahrukh | 2014-02-01  |
+| 112 | Salman   | Khan      | sallu@gmail.com | 9187654321 | 1975-03-04 |     212 | Ram Complex |      5 | 123salman   | 123salman   | 2014-05-01  |
+| 138 | Sukhi    | Kanchan   | kan@gmail.com   | 9999354321 | 1989-02-14 |     238 | Suda Chatra |      4 | 123kanchan  | 123kanchan  | 2011-01-20  |
+| 139 | Ankush   | Choudhari | an@gmail.com    | 9999454321 | 1981-09-01 |     239 | Suda Chatra |      5 | 123ankush   | 123ankush   | 2011-01-20  |
++-----+----------+-----------+-----------------+------------+------------+---------+-------------+--------+-------------+-------------+-------------+
+6 rows in set (0.109 sec)
+
+MariaDB [society_management]> select fname,lname from usermst where UID=(select UID from rentmst where status='pending');
+ERROR 1054 (42S22): Unknown column 'status' in 'where clause'
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from rentmst where status='pending');
+ERROR 1054 (42S22): Unknown column 'status' in 'where clause'
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from rentmst where Status='pending');
+ERROR 1054 (42S22): Unknown column 'Status' in 'where clause'
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from complainmst where status='pending');
+ERROR 1242 (21000): Subquery returns more than 1 row
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from complainmst GROUP BY status having status='pending');
++-------+-------+
+| fname | lname |
++-------+-------+
+| Ram   | Sule  |
++-------+-------+
+1 row in set (0.001 sec)
+
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from complainmst group by sname having status='pending');
+ERROR 1054 (42S22): Unknown column 'sname' in 'group statement'
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from complainmst group by subject having status='pending');
+ERROR 1054 (42S22): Unknown column 'status' in 'having clause'
+MariaDB [society_management]> select fname,lname from usermst where uid=(select uid from complainmst group by status='pending');
+ERROR 1242 (21000): Subquery returns more than 1 row
+MariaDB [society_management]> select fname,lname from usermst group by societyname having uid=(select uid from complainmst where status='pending');
+ERROR 1054 (42S22): Unknown column 'uid' in 'having clause'
+MariaDB [society_management]> select fname,lname from usermst where uid IN(select uid from complainmst where status='pending');
++---------+--------+
+| fname   | lname  |
++---------+--------+
+| Ram     | Sule   |
+| Haresh  | Gurav  |
+| Jitesh  | Salvi  |
+| Amir    | Khan   |
+| Mithila | Palkar |
++---------+--------+
+5 rows in set (0.132 sec)
+
+MariaDB [society_management]> select fname,lname,societyname from usermst where uid IN(select uid from complainmst where status='pending');
++---------+--------+---------------+
+| fname   | lname  | societyname   |
++---------+--------+---------------+
+| Ram     | Sule   | Durga Darshan |
+| Haresh  | Gurav  | Durga Darshan |
+| Jitesh  | Salvi  | Trimurti      |
+| Amir    | Khan   | Jeshth        |
+| Mithila | Palkar | Janadhish     |
++---------+--------+---------------+
+5 rows in set (0.001 sec)
+
+MariaDB [society_management]> select fname,lname,societyname from usermst where uid=(select uid from rentmst where rent>10000);
+ERROR 1242 (21000): Subquery returns more than 1 row
+MariaDB [society_management]> select fname,lname,societyname from usermst where uid IN(select uid from rentmst where rent>10000);
++---------+----------+---------------+
+| fname   | lname    | societyname   |
++---------+----------+---------------+
+| Shital  | Kolhe    | Durga Darshan |
+| Rahul   | Mahajan  | Trimurti      |
+| Kamlesh | Kulkarni | Ram Complex   |
+| Samir   | Desle    | Tridant       |
+| Sahil   | Khan     | Juhu Complex  |
+| Rakul   | Singh    | Harvey        |
+| Nicolas | Puran    | Hemalaya      |
++---------+----------+---------------+
+7 rows in set (0.001 sec)
+
+MariaDB [society_management]> create view available_on_rent AS select * from rentmst;
+Query OK, 0 rows affected (0.116 sec)
+
+MariaDB [society_management]> select * from available_on_rent;
++-----+-----+---------------+-----+-------+-------------+
+| RID | HID | SName         | UID | Rent  | RCreateDate |
++-----+-----+---------------+-----+-------+-------------+
+| 400 | 201 | Durga Darshan | 101 |  6000 | 2017-04-12  |
+| 401 | 202 | Durga Darshan | 102 |  9880 | 2016-01-02  |
+| 402 | 203 | Durga Darshan | 103 | 12000 | 2016-12-02  |
+| 403 | 206 | Trimurti      | 106 |  3000 | 2018-02-02  |
+| 404 | 207 | Trimurti      | 107 | 13400 | 2018-02-02  |
+| 405 | 210 | Ram Complex   | 110 | 11000 | 2019-04-18  |
+| 406 | 211 | Ram Complex   | 111 |  7500 | 2019-05-18  |
+| 407 | 214 | Jeshth        | 114 |  8500 | 2018-10-21  |
+| 408 | 215 | Jeshth        | 115 |  3200 | 2018-10-11  |
+| 409 | 218 | Janadhish     | 118 |  3700 | 2017-10-11  |
+| 410 | 219 | Janadhish     | 119 |  3800 | 2017-11-19  |
+| 411 | 222 | Sudama        | 122 |  8800 | 2018-03-29  |
+| 412 | 225 | Suhana        | 125 |  5800 | 0000-00-00  |
+| 413 | 226 | Suhana        | 126 |  6000 | 2017-09-09  |
+| 414 | 229 | Sai Darshan   | 129 |  9000 | 2019-10-09  |
+| 415 | 231 | Tridant       | 131 | 12800 | 2019-12-01  |
+| 416 | 233 | Juhu Complex  | 133 | 14200 | 2020-02-11  |
+| 417 | 235 | Harvey        | 135 | 16000 | 2020-03-18  |
+| 418 | 237 | Jagadhish     | 137 |  2800 | 2021-05-28  |
+| 419 | 239 | Suda Chatra   | 139 |  7200 | 2019-03-24  |
+| 420 | 241 | Hemalaya      | 141 | 10350 | 2018-12-24  |
+| 421 | 243 | Dvipal        | 143 |  2350 | 2017-06-07  |
++-----+-----+---------------+-----+-------+-------------+
+22 rows in set (0.144 sec)
+
+MariaDB [society_management]> create view rent_and_sell_societies AS select sellmst.sname, sellmst.sell, rentmst.sname, rentmst.rent from sellmst, rentmst;
+ERROR 1060 (42S21): Duplicate column name 'sname'
+MariaDB [society_management]> create view rent_and_sell_societies AS select sellmst.sname, sellmst.sell, rentmst.sname, rentmst.rent from sellmst, rentmst where sellmst.uid=rentmst.uid;
+ERROR 1060 (42S21): Duplicate column name 'sname'
+MariaDB [society_management]> create view rent_and_sell_societies AS select sellmst.sname, sellmst.sell, rentmst.rent from sellmst, rentmst where sellmst.uid=rentmst.uid;
+Query OK, 0 rows affected (0.045 sec)
+
+MariaDB [society_management]> create view rent_and_sell AS select sellmst.sell, rentmst.rent from sellmst, rentmst where sellmst.uid=rentmst.uid;
+Query OK, 0 rows affected (0.119 sec)
+
+MariaDB [society_management]> select*from rent_and_sell;
+Empty set (0.104 sec)
+
+MariaDB [society_management]> select*from rent_and_sell_societies;
+Empty set (0.001 sec)
+
+MariaDB [society_management]> create view rent_and_society AS select rentmst.sname, rentmst.rent from rentmst;
+Query OK, 0 rows affected (0.046 sec)
+
+MariaDB [society_management]> select*from rent_and_society;
++---------------+-------+
+| sname         | rent  |
++---------------+-------+
+| Durga Darshan |  6000 |
+| Durga Darshan |  9880 |
+| Durga Darshan | 12000 |
+| Trimurti      |  3000 |
+| Trimurti      | 13400 |
+| Ram Complex   | 11000 |
+| Ram Complex   |  7500 |
+| Jeshth        |  8500 |
+| Jeshth        |  3200 |
+| Janadhish     |  3700 |
+| Janadhish     |  3800 |
+| Sudama        |  8800 |
+| Suhana        |  5800 |
+| Suhana        |  6000 |
+| Sai Darshan   |  9000 |
+| Tridant       | 12800 |
+| Juhu Complex  | 14200 |
+| Harvey        | 16000 |
+| Jagadhish     |  2800 |
+| Suda Chatra   |  7200 |
+| Hemalaya      | 10350 |
+| Dvipal        |  2350 |
++---------------+-------+
+22 rows in set (0.001 sec)
+
+MariaDB [society_management]> create view society_address AS select societymst.sname, societymst.address from societymst;
+Query OK, 0 rows affected (0.107 sec)
+
+MariaDB [society_management]> select*from society_address;
++------------------+----------------------------------------------------+
+| sname            | address                                            |
++------------------+----------------------------------------------------+
+| Durga Darshan    | sainagar, kranti road, Kalyan east                 |
+| Smriti           | desai gaon, desai road, Karjat east                |
+| Hari Om          | narayan nagar, hari road, Shahad                   |
+| Krishna          | sainagar, kranti road, kalyan                      |
+| Kirti            | kirtinagar, murti road, kalyan                     |
+| Suhana complex   | kirtinagar, murti road, kalyan east                |
+| Suhana           | narayan nagar, hari road, Shahad                   |
+| Naina            | nana nagar, desai road, Karjat                     |
+| Trimurti         | kailash nagar, krupa road, Karjat                  |
+| Shreelok         | saishanti nagar, krupalu road, Karjat              |
+| Ram complex      | ram nagar, tirth road, Pune                        |
+| Sita complex     | dhumaal nagar, dhumaal road, Pune                  |
+| Laxman complex   | kamala nagar, hari road, Pune                      |
+| Hira Nandani     | sector 7, saint churchil road, Mumbai              |
+| Kuber            | sector 9, oxford road, Mumbai                      |
+| Jeshth           | jadhav vadi, zeno road, Mumbai                     |
+| Shnatikrupa      | sankarshan vadi, lal bahadur shastri road, Churchg |
+| Krupashnati      | shiksha nagar, sule road, Nashik                   |
+| Sudama           | mahatma nagar, phule road, Nashik                  |
+| Janadhish        | lala nagar, Maulana road, Auranagabad              |
+| Sambhaji society | fatima nagar, Maulana road, Auranagabad            |
+| Gajanan darshan  | shivaji chowk, trupti road, Auranagabad            |
+| Sai Darshan      | ramnagar, phule road, diva west                    |
+| Tridant          | tilaknagar, gupte road, diva east                  |
+| Juhu Complex     | milapnagar, tondon road, kharghar                  |
+| Harvey           | kiran nagar, tondon road, kharghar                 |
+| Jagadhish        | gaikwad wadi, 22 no road, thane east               |
+| Suda Chatra      | sudha wadi, 16 no road, thane west                 |
+| Hemalaya         | vishnunagar, 11 no road, thane west                |
+| Dvipal           | prabhatnagar, 26 no road, thane east               |
+| Hira Jyoti       | kalshe nagar, shise road, mulund east              |
+| Sakal Jyoti      | bhise nagar, shise road, mulund east               |
+| Deep Jaya        | nandgaon, gupte road, mulund west                  |
+| Sankalp          | jakat naka, jakat naka road, mulund west           |
++------------------+----------------------------------------------------+
+34 rows in set (0.001 sec)
+
+MariaDB [society_management]> select * from sellmst INNER JOIN rentmst ON sellmst.uid=rentmst.uid;
+Empty set (0.001 sec)
+
+MariaDB [society_management]> select * from sellmst INNER JOIN complainmst ON sellmst.uid=complainmst.uid;
++-----+-----+---------------+-----+---------+----------------+-----+-----+-------------------------------------+--------------------------------------+----------------------------+---------+-------------+
+| SID | HID | SName         | UID | Sell    | SellCreateDate | CID | UID | Subject                             | Complain                             | Reply                      | Status  | CCreateDate |
++-----+-----+---------------+-----+---------+----------------+-----+-----+-------------------------------------+--------------------------------------+----------------------------+---------+-------------+
+| 300 | 200 | Durga Darshan | 100 | 2000000 | 2021-09-02     | 500 | 100 | Water shortage                      | Regarding shortage of water in house | still complaint is pending | pending | 2014-05-11  |
+| 302 | 205 | Trimurti      | 105 | 6000000 | 2021-10-02     | 505 | 105 | Safety fraudulent/incomplete audits | Regarding incompletion of audits     | Still audits are pending   | pending | 2014-10-16  |
+| 314 | 208 | Trimurti      | 108 | 6950000 | 2021-11-23     | 508 | 108 | Facing parking problem              | Regarding parking problem            |                            | solved  | 2015-03-08  |
+| 304 | 209 | Ram Complex   | 109 | 4900000 | 2020-01-22     | 509 | 109 | Facing water leakage problem        | Regarding water leakage in bedroom   | Thank you                  | solved  | 2015-03-07  |
+| 316 | 212 | Ram Complex   | 112 | 5980000 | 2021-12-28     | 512 | 112 | Facing parking problem              | Regarding parking problem            | NULL                       | solved  | 2016-06-22  |
+| 306 | 213 | Jeshth        | 113 | 4000000 | 2021-12-22     | 513 | 113 | High maintenance charges            | Regarding high maintenance charges   | NULL                       | pending | 2016-07-23  |
+| 308 | 217 | Janadhish     | 117 | 2800000 | 2019-06-22     | 517 | 117 | Facing water leakage problem        | Regarding water leakage at bathroom  | no problem now             | solved  | 2017-11-27  |
++-----+-----+---------------+-----+---------+----------------+-----+-----+-------------------------------------+--------------------------------------+----------------------------+---------+-------------+
+7 rows in set (0.339 sec)
+
+MariaDB [society_management]> select s.sname,s.uid,c.subject,c.complain,c.status from sellmst s INNER JOIN complainmst c ON s.uid=c.uid;
++---------------+-----+-------------------------------------+--------------------------------------+---------+
+| sname         | uid | subject                             | complain                             | status  |
++---------------+-----+-------------------------------------+--------------------------------------+---------+
+| Durga Darshan | 100 | Water shortage                      | Regarding shortage of water in house | pending |
+| Trimurti      | 105 | Safety fraudulent/incomplete audits | Regarding incompletion of audits     | pending |
+| Trimurti      | 108 | Facing parking problem              | Regarding parking problem            | solved  |
+| Ram Complex   | 109 | Facing water leakage problem        | Regarding water leakage in bedroom   | solved  |
+| Ram Complex   | 112 | Facing parking problem              | Regarding parking problem            | solved  |
+| Jeshth        | 113 | High maintenance charges            | Regarding high maintenance charges   | pending |
+| Janadhish     | 117 | Facing water leakage problem        | Regarding water leakage at bathroom  | solved  |
++---------------+-----+-------------------------------------+--------------------------------------+---------+
+7 rows in set (0.001 sec)
+
+MariaDB [society_management]> select s.uid,s.hid,s.sname,s.sell,c.subject,c.complain,c.status from sellmst s INNER JOIN complainmst c ON s.uid=c.uid;
++-----+-----+---------------+---------+-------------------------------------+--------------------------------------+---------+
+| uid | hid | sname         | sell    | subject                             | complain                             | status  |
++-----+-----+---------------+---------+-------------------------------------+--------------------------------------+---------+
+| 100 | 200 | Durga Darshan | 2000000 | Water shortage                      | Regarding shortage of water in house | pending |
+| 105 | 205 | Trimurti      | 6000000 | Safety fraudulent/incomplete audits | Regarding incompletion of audits     | pending |
+| 108 | 208 | Trimurti      | 6950000 | Facing parking problem              | Regarding parking problem            | solved  |
+| 109 | 209 | Ram Complex   | 4900000 | Facing water leakage problem        | Regarding water leakage in bedroom   | solved  |
+| 112 | 212 | Ram Complex   | 5980000 | Facing parking problem              | Regarding parking problem            | solved  |
+| 113 | 213 | Jeshth        | 4000000 | High maintenance charges            | Regarding high maintenance charges   | pending |
+| 117 | 217 | Janadhish     | 2800000 | Facing water leakage problem        | Regarding water leakage at bathroom  | solved  |
++-----+-----+---------------+---------+-------------------------------------+--------------------------------------+---------+
+7 rows in set (0.001 sec)
+
+MariaDB [society_management]> select r.uid,r.hid,r.sname,r.rent,c.subject,c.complain,c.status from rentmst r INNER JOIN complainmst c ON r.uid=c.uid;
++-----+-----+---------------+-------+------------------------------+--------------------------------------+---------+
+| uid | hid | sname         | rent  | subject                      | complain                             | status  |
++-----+-----+---------------+-------+------------------------------+--------------------------------------+---------+
+| 101 | 201 | Durga Darshan |  6000 | High maintenance charges     | Regarding high maintenance charges   | solved  |
+| 102 | 202 | Durga Darshan |  9880 | Facing parking problem       | Regarding parking problem            | solved  |
+| 103 | 203 | Durga Darshan | 12000 | Facing water leakage problem | Regarding water leakage at bathroom  | solved  |
+| 106 | 206 | Trimurti      |  3000 | High maintenance charges     | Regarding high maintenance charges   | solved  |
+| 107 | 207 | Trimurti      | 13400 | Water shortage               | Regarding shortage of water in house | solved  |
+| 110 | 210 | Ram Complex   | 11000 | Safety neglect               | Regarding safety neglect             | solved  |
+| 111 | 211 | Ram Complex   |  7500 | Water shortage               | Regarding shortage of water in house | solved  |
+| 114 | 214 | Jeshth        |  8500 | Safety neglect               | Regarding safety neglect             | solved  |
+| 115 | 215 | Jeshth        |  3200 | Safety incomplete audits     | Regarding incompletion of audits     | solved  |
+| 118 | 218 | Janadhish     |  3700 | Facing parking problem       | Regarding parking problem            | solved  |
+| 119 | 219 | Janadhish     |  3800 | Water shortage               | Regarding shortage of water in house | pending |
++-----+-----+---------------+-------+------------------------------+--------------------------------------+---------+
+11 rows in set (0.001 sec)
+
+MariaDB [society_management]> select s1.sname, s2.sell from sellmst s1 join sellmst s2 on s1.uid=s2.uid;
++---------------+----------+
+| sname         | sell     |
++---------------+----------+
+| Durga Darshan |  2000000 |
+| Sai Darshan   |  2500000 |
+| Trimurti      |  6000000 |
+| Tridant       |  4500000 |
+| Ram Complex   |  4900000 |
+| Juhu Complex  |  8000000 |
+| Jeshth        |  4000000 |
+| Harvey        |  3000000 |
+| Janadhish     |  2800000 |
+| Jagadish      |  4100000 |
+| Sudama        |  5100000 |
+| Suda Chatra   |  7300000 |
+| Suhana        |  6000000 |
+| Hemalaya      |  6200000 |
+| Trimurti      |  6950000 |
+| Dvipal        |  5050000 |
+| Ram Complex   |  5980000 |
+| Hira Jyoti    |  3990000 |
+| Sakal Jyoti   |  6390000 |
+| Deep Jaya     |  7390000 |
+| Sankalp       |  3490000 |
+| Sudama        | 12400000 |
++---------------+----------+
+22 rows in set (0.024 sec)
+
+MariaDB [society_management]> select s1.uid as owner_id, s1.sname as society_name, s2.sell as selling_price from sellmst s1 join sellmst s2 on s1.uid=s2.uid;
++----------+---------------+---------------+
+| owner_id | society_name  | selling_price |
++----------+---------------+---------------+
+|      100 | Durga Darshan |       2000000 |
+|      128 | Sai Darshan   |       2500000 |
+|      105 | Trimurti      |       6000000 |
+|      130 | Tridant       |       4500000 |
+|      109 | Ram Complex   |       4900000 |
+|      132 | Juhu Complex  |       8000000 |
+|      113 | Jeshth        |       4000000 |
+|      134 | Harvey        |       3000000 |
+|      117 | Janadhish     |       2800000 |
+|      136 | Jagadish      |       4100000 |
+|      121 | Sudama        |       5100000 |
+|      138 | Suda Chatra   |       7300000 |
+|      124 | Suhana        |       6000000 |
+|      140 | Hemalaya      |       6200000 |
+|      108 | Trimurti      |       6950000 |
+|      142 | Dvipal        |       5050000 |
+|      112 | Ram Complex   |       5980000 |
+|      144 | Hira Jyoti    |       3990000 |
+|      146 | Sakal Jyoti   |       6390000 |
+|      148 | Deep Jaya     |       7390000 |
+|      151 | Sankalp       |       3490000 |
+|      123 | Sudama        |      12400000 |
++----------+---------------+---------------+
+22 rows in set (0.001 sec)
+
+MariaDB [society_management]> drop view rent_and_sell;
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [society_management]> desc rent_and_sell;
+ERROR 1146 (42S02): Table 'society_management.rent_and_sell' doesn't exist
+MariaDB [society_management]> alter table sellmst change column SID SeID int primary key;
+ERROR 1068 (42000): Multiple primary key defined
+MariaDB [society_management]> alter table sellmst change column SID SeID int;
+Query OK, 0 rows affected (0.633 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [society_management]> desc sellmst;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| SeID           | int(11)     | NO   | PRI | NULL    |       |
+| HID            | int(11)     | NO   | MUL | NULL    |       |
+| SName          | varchar(20) | NO   |     | NULL    |       |
+| UID            | int(11)     | NO   | MUL | NULL    |       |
+| Sell           | float       | NO   |     | NULL    |       |
+| SellCreateDate | date        | NO   |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+6 rows in set (0.011 sec)
+
+MariaDB [society_management]> select * from sellmst;
++------+-----+---------------+-----+----------+----------------+
+| SeID | HID | SName         | UID | Sell     | SellCreateDate |
++------+-----+---------------+-----+----------+----------------+
+|  300 | 200 | Durga Darshan | 100 |  2000000 | 2021-09-02     |
+|  301 | 228 | Sai Darshan   | 128 |  2500000 | 2020-09-02     |
+|  302 | 205 | Trimurti      | 105 |  6000000 | 2021-10-02     |
+|  303 | 230 | Tridant       | 130 |  4500000 | 2019-10-22     |
+|  304 | 209 | Ram Complex   | 109 |  4900000 | 2020-01-22     |
+|  305 | 232 | Juhu Complex  | 132 |  8000000 | 2020-12-22     |
+|  306 | 213 | Jeshth        | 113 |  4000000 | 2021-12-22     |
+|  307 | 234 | Harvey        | 134 |  3000000 | 2018-02-22     |
+|  308 | 217 | Janadhish     | 117 |  2800000 | 2019-06-22     |
+|  309 | 236 | Jagadish      | 136 |  4100000 | 2020-06-12     |
+|  310 | 221 | Sudama        | 121 |  5100000 | 2021-06-12     |
+|  311 | 238 | Suda Chatra   | 138 |  7300000 | 2020-06-12     |
+|  312 | 224 | Suhana        | 124 |  6000000 | 2019-06-12     |
+|  313 | 240 | Hemalaya      | 140 |  6200000 | 2020-09-23     |
+|  314 | 208 | Trimurti      | 108 |  6950000 | 2021-11-23     |
+|  315 | 242 | Dvipal        | 142 |  5050000 | 2020-11-23     |
+|  316 | 212 | Ram Complex   | 112 |  5980000 | 2021-12-28     |
+|  317 | 244 | Hira Jyoti    | 144 |  3990000 | 2022-01-28     |
+|  318 | 246 | Sakal Jyoti   | 146 |  6390000 | 2019-04-28     |
+|  319 | 248 | Deep Jaya     | 148 |  7390000 | 2020-04-28     |
+|  320 | 251 | Sankalp       | 151 |  3490000 | 2019-05-28     |
+|  321 | 223 | Sudama        | 123 | 12400000 | 2021-05-28     |
++------+-----+---------------+-----+----------+----------------+
+22 rows in set (0.107 sec)
